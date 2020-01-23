@@ -1,0 +1,23 @@
+spring:
+  kafka:
+    template:
+      default-topic: file.received
+    producer:
+      bootstrap-servers:
+        - localhost:9092
+        - localhost:9091
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      bootstrap-servers:
+        - localhost:9092
+        - localhost:9091
+      group-id: random-consumer
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: com.xxm.dataingestionservice.ingestion
