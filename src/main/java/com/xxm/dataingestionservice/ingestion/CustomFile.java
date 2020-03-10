@@ -9,9 +9,15 @@ public class CustomFile extends File implements Serializable {
     private String timeInterval;
     private String function;
     private String timeStamp;
+    private String symbol;
 
-    public CustomFile(){
-        super("");
+    public CustomFile(String fileName){
+        super(fileName);
+        String[] temp = fileName.split("_");
+        this.timeInterval = temp[1];
+        String[] locationsPrefix = temp[0].split("/");
+        this.symbol = locationsPrefix[locationsPrefix.length-1];
+        this.location = fileName;
     }
 
     public CustomFile(String location, String timeInterval, String function, String timeStamp) {
@@ -36,5 +42,9 @@ public class CustomFile extends File implements Serializable {
 
     public String getTimeStamp() {
         return timeStamp;
+    }
+
+    public String getSymbol() {
+        return symbol;
     }
 }

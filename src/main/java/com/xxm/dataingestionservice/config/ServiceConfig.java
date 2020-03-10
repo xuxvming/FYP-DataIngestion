@@ -6,6 +6,7 @@ import com.xxm.dataingestionservice.ingestion.FileManagerImpl;
 import com.xxm.dataingestionservice.ingestion.IngestionManagerImpl;
 import com.xxm.dataingestionservice.message.MessageConsumer;
 import com.xxm.dataingestionservice.message.MessageProducer;
+import com.xxm.dataingestionservice.utils.FileWatcher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,9 +22,15 @@ public class ServiceConfig {
     public FileManager fileManager(){ return new FileManagerImpl(); }
 
     @Bean
+    public MessageConsumer messageConsumer(){return new MessageConsumer();}
+
+    @Bean
     public MessageProducer messageProducer(){return new MessageProducer();}
 
     @Bean
-    public MessageConsumer messageConsumer(){return new MessageConsumer();}
+    public FileWatcher fileWatcher(){
+        return new FileWatcher();
+    }
+
 
 }

@@ -1,4 +1,4 @@
-package com.xxm.dataingestionservice.request;
+package com.xxm.dataingestionservice.utils;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;

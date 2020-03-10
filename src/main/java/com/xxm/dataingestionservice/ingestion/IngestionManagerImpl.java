@@ -6,7 +6,8 @@ import com.xxm.dataingestionservice.controller.IngestionManager;
 import com.xxm.dataingestionservice.controller.RequestSettings;
 import com.xxm.dataingestionservice.exception.DataRetrievalException;
 import com.xxm.dataingestionservice.message.MessageProducer;
-import com.xxm.dataingestionservice.request.RequestMaker;
+import com.xxm.dataingestionservice.utils.FileWatcher;
+import com.xxm.dataingestionservice.utils.RequestMaker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class IngestionManagerImpl implements IngestionManager {
     @Value("${service.api.AlphaVantage.key}")
     private String key;
 
+
     @Autowired
     ObjectMapper objectMapper;
 
@@ -38,23 +40,26 @@ public class IngestionManagerImpl implements IngestionManager {
     FileManager fileManager;
 
     @Autowired
+    FileWatcher fileWatcher;
+
+    @Autowired
     MessageProducer messageProducer;
 
     public Map retrieveData(String symbol, String function, String timeInterval){
-        RequestMaker requestMaker = new RequestMaker(url,key);
-        HashMap<String,String> requestParams = constructParams(symbol,function,timeInterval);
-        try {
-            Optional<String> res = requestMaker.makeRequest(requestParams,"GET");
-            if(res.isPresent()){
-                String responseString = res.get();
-                Map<String,Map<String, Object>> response = objectMapper.readValue(responseString, Map.class);
-                return getTodayDataFromJson(response,timeInterval);
-            }else {
+            RequestMaker requestMaker = new RequestMaker(url,key);
+            HashMap<String,String> requestParams = constructParams(symbol,function,timeInterval);
+            try {
+                Optional<String> res = requestMaker.makeRequest(requestParams,"GET");
+                if(res.isPresent()){
+                    String responseString = res.get();
+                    Map<String,Map<String, Object>> response = objectMapper.readValue(responseString, Map.class);
+                    return getTodayDataFromJson(response,timeInterval);
+                }else {
+                    throw new DataRetrievalException("Unable to retrieve data");
+                }
+            } catch (IOException e) {
                 throw new DataRetrievalException("Unable to retrieve data");
             }
-        } catch (IOException e) {
-            throw new DataRetrievalException("Unable to retrieve data");
-        }
     }
 
     public String retrieveDataAsFile(String symbol, String function, String timeInterval){
@@ -72,6 +77,7 @@ public class IngestionManagerImpl implements IngestionManager {
         }
         return responseString;
     }
+
 
     private HashMap<String,String> constructParams(String symbol, String function, String timeInterval){
         HashMap<String,String> requestParams = new HashMap<>();

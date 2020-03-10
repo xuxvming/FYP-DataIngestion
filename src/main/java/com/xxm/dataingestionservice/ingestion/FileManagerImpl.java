@@ -31,7 +31,7 @@ public class FileManagerImpl implements FileManager {
         String filePath = poolAddress+fileParams.get(RequestSettings.SYMBOL.getField());
         String function = (String) fileParams.get(RequestSettings.TIME_INTERVAL.getField());
         String timeInterval = (String) fileParams.get(RequestSettings.FUNCTION.getField());
-        String fileName = fileParams.get(RequestSettings.SYMBOL.getField())+"_"+ function+"_"+timeInterval+"_"+timeStamp;
+        String fileName = fileParams.get(RequestSettings.SYMBOL.getField())+"_"+ function+"_"+timeInterval+"_"+timeStamp+".csv";
         CustomFile symbolFile = new CustomFile (filePath+File.separator+fileName,function,timeInterval,timeStamp);
         try {
             FileUtils.writeStringToFile(symbolFile,content, Charset.defaultCharset());
@@ -99,6 +99,7 @@ public class FileManagerImpl implements FileManager {
             for (int j = 0; j < line.length; j++){
                 hm.put(headers.get(j),line[j]);
             }
+            hm.put("SymbolID",file.getSymbol());
             res.add(hm);
         }
         return res;
